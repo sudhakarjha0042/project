@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Search</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Product Search</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <br>
+        {% if results %}
+            {% for result in results %}
+                {% if result.links %}
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h3>Category: {{ result.category }}</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                {% for link in result.links %}
+                                    <li class="list-group-item">
+                                        <a href="{{ link.1 }}" target="_blank">{{ link.0 }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% if result.product_details %}
+                            <div class="card-footer">
+                                <h4>Product Details:</h4>
+                                <ul class="list-group">
+                                    {% for product_detail in result.product_details %}
+                                        <li class="list-group-item">
+                                            <strong>Product Title:</strong> {{ product_detail.product_title }}<br>
+                                            <strong>Product URL:</strong> <a href="{{ product_detail.product_url }}" target="_blank">{{ product_detail.product_url }}</a><br>
+                                            <strong>Seller Name:</strong> {{ product_detail.seller_name }}<br>
+                                            <strong>Seller Resellers:</strong> {{ product_detail.seller_resellers }}<br>
+                                            <strong>Seller Rating:</strong> {{ product_detail.seller_rating }}<br>
+                                            <strong>Product Brand:</strong> {{ product_detail.product_brand }}<br>
+                                            <strong>Minimum Qty Per Consignee:</strong> {{ product_detail.moq }}<br>
+                                            <strong>List Price:</strong> {{ product_detail.list_price }}<br>
+                                            <strong>Final Price:</strong> {{ product_detail.final_price }}<br>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
